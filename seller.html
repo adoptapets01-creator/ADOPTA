@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Adopta - Seller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background:url("https://i.supaimg.com/30640085-64df-48fb-a5a1-1091d003b596/0fc3ee76-9853-4c71-acb8-6b94d51303d6.jpg") no-repeat center/cover fixed;
+}
+
+/* Dark overlay */
+body::before{
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+    z-index:-1;
+}
+
+/* ===== Top Navbar ===== */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 25px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.2);
+    color:white;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:600;
+}
+
+.nav-buttons button{
+    margin-left:10px;
+    padding:8px 16px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.home-btn{
+    background:#10B981;
+    color:white;
+}
+
+.logout-btn{
+    background:#EF4444;
+    color:white;
+}
+
+/* ===== Main Container ===== */
+.wrapper{
+    display:flex;
+    justify-content:center;
+    padding:30px 10px;
+}
+
+.container{
+    width:100%;
+    max-width:950px;
+    padding:30px;
+    border-radius:20px;
+
+    /* Glass Effect */
+   background:rgba(0,0,0,0.25);  /* more transparent */
+    backdrop-filter:blur(0px);
+    -webkit-backdrop-filter:blur(0px);
+
+    border:1px solid rgba(255,255,255,0.25);
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+
+    color:white;
+}
+
+/* Split layout */
+.form-row{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+.left-form, .right-form{
+    flex:1;
+    min-width:280px;
+    padding:15px;
+    background:rgba(255,255,255,0.08);
+    border-radius:15px;
+}
+
+/* Fields */
+.field{
+    width:100%;
+    height:42px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+    padding:0 10px;
+    background:rgba(255,255,255,0.25);
+    color:white;
+    outline:none;
+    box-sizing:border-box;
+}
+
+textarea.field{
+    height:70px;
+    padding-top:8px;
+}
+
+.field::placeholder{
+    color:#eee;
+}
+
+/* Vaccine */
+.vaccine-group{
+    font-size:14px;
+    margin-top:5px;
+}
+
+/* Submit button center */
+.submit-area{
+    text-align:center;
+    margin-top:15px;
+}
+
+.submit-btn{
+    width:220px;
+    height:44px;
+    border:none;
+    border-radius:10px;
+    background:#2563EB;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+}
+
+/* My Pets section */
+.my-pets{
+    margin-top:25px;
+    padding:15px;
+    border-radius:15px;
+    background:rgba(255,255,255,0.08);
+}
+
+.pet-card{
+    background:rgba(255,255,255,0.15);
+    padding:10px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+/* Common field style */
+.field{
+    width:100%;
+    height:44px;
+    margin:10px 0;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.3);
+    padding:0 12px;
+    background:rgba(255,255,255,0.15);
+    color:white;
+    font-size:14px;
+    outline:none;
+    box-sizing:border-box;
+    backdrop-filter:blur(10px);
+    transition:0.2s;
+}
+
+/* Placeholder */
+.field::placeholder{
+    color:#ddd;
+}
+
+/* Focus effect (modern glow) */
+.field:focus{
+    border:1px solid #60A5FA;
+    box-shadow:0 0 8px rgba(96,165,250,0.6);
+    background:rgba(255,255,255,0.2);
+}
+
+/* Select dropdown text fix */
+select.field{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 20 20'%3E%3Cpath d='M5 7l5 5 5-5H5z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 10px center;
+    background-size:14px;
+}
+
+/* Dropdown options visible */
+select.field option{
+    background:#1F2937;   /* dark background */
+    color:white;
+}
+
+/* Hover effect */
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,0.3);
+}
+
+/* Toast */
+.toast{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    min-width:250px;
+    padding:14px 20px;
+    background:#111;
+    color:#fff;
+    border-radius:8px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+    opacity:0;
+    transform:translateY(20px);
+    transition:all 0.3s ease;
+    z-index:999;
+    font-size:14px;
+}
+
+/* Show state */
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* Success */
+.toast.success{
+    background:#10B981;
+}
+
+/* Error */
+.toast.error{
+    background:#EF4444;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">Ad🐾pta</div>
+    <div class="nav-buttons">
+        <button class="home-btn" onclick="location.href='index.html'">Home</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<div class="wrapper">
+<div class="container">
+
+<h2>Add Pet for Adoption</h2>
+
+<div class="form-row">
+
+<!-- LEFT SIDE -->
+<div class="left-form">
+<input class="field" id="petName" placeholder="Pet Name">
+<select class="field" id="petType">
+<option value="">Pet Type</option>
+<option>Dog</option>
+<option>Cat</option>
+</select>
+<input class="field" id="breed" placeholder="Breed">
+<input class="field" id="age" type="number" placeholder="Age (months)">
+<input class="field" id="location" placeholder="Location">
+<input class="field" id="sellerPhone" placeholder="Mobile Number">
+<textarea class="field" id="description" placeholder="Description"></textarea>
+
+<div class="vaccine-group">
+<b>Vaccination</b><br>
+<label><input type="checkbox" id="rabies"> Rabies</label>
+<label><input type="checkbox" id="dhpp"> DHPP/FVRCP</label>
+<label><input type="checkbox" id="deworm"> Dewormed</label>
+</div>
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="right-form">
+<input class="field" id="img1" placeholder="Image URL 1">
+<input class="field" id="img2" placeholder="Image URL 2">
+<input class="field" id="img3" placeholder="Image URL 3">
+<input class="field" id="img4" placeholder="Image URL 4">
+<input class="field" id="img5" placeholder="Image URL 5">
+</div>
+
+</div>
+
+<div class="submit-area">
+<button class="submit-btn" onclick="submitPet()">Submit for Approval</button>
+</div>
+
+<!-- My Pets -->
+<div class="my-pets">
+<h3>My Pets</h3>
+<div id="myPetsList">No pets yet</div>
+</div>
+
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+const firebaseConfig = {
+
+    apiKey: "AIzaSyAyqttS3yl4qJMWF0fzsOyvTrf2-4JDkLY",
+    authDomain: "adopta-25b7f.firebaseapp.com",
+    projectId: "adopta-25b7f"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// Protect Seller Page
+auth.onAuthStateChanged(function(user){
+
+    if(!user){
+        localStorage.setItem("redirectAfterLogin", "seller.html");
+        window.location.href = "login.html";
+        return;
+    }
+
+    loadMyPets(user.uid);
+
+});
+
+
+function logout(){
+    auth.signOut().then(()=>{
+        window.location.href="login.html";
+    });
+}
+
+
+
+/* Submit Pet */
+
+function submitPet(){
+
+    const user = firebase.auth().currentUser;
+
+    if(!user){
+        showToast("Please login first");
+        localStorage.setItem("redirectAfterLogin", "seller.html");
+        window.location.href = "login.html";
+        return;
+    }
+
+
+    
+    // ===== Get values (correct IDs) =====
+    const petName = document.getElementById("petName").value.trim();
+    const petType = document.getElementById("petType").value;
+    const breed = document.getElementById("breed").value.trim();
+    const age = document.getElementById("age").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const sellerPhone = document.getElementById("sellerPhone").value.trim();
+    const description = document.getElementById("description").value.trim();
+
+    if(!petName || !petType || !breed || !age || !location || !sellerPhone){
+        showToast("Please fill all required fields");
+        return;
+    }
+
+    // Vaccines
+    let vaccines = [];
+    if(document.getElementById("rabies").checked) vaccines.push("Rabies");
+    if(document.getElementById("dhpp").checked) vaccines.push("DHPP/FVRCP");
+    if(document.getElementById("deworm").checked) vaccines.push("Dewormed");
+
+    // Images
+    let images = [];
+    ["img1","img2","img3","img4","img5"].forEach(id=>{
+        let val = document.getElementById(id).value.trim();
+        if(val) images.push(val);
+    });
+
+    if(images.length === 0){
+          showToast("Please add at least one image");
+        return;
+    }
+
+    // ===== Save to Firestore =====
+    db.collection("pet_requests").add({
+        sellerId: user.uid,
+        petName,
+        petType,
+        breed,
+        age,
+        location,
+        sellerPhone,
+        description,
+        vaccines,
+        imageUrls: images,
+        status: "pending",
+        createdAt: new Date()
+    })
+    .then(()=>{
+        showToast("Submitted for approval");
+        loadMyPets(user.uid); // refresh My Pets
+    })
+    .catch(error=>{
+        showToast(error.message);
+        console.error(error);
+    });
+}
+
+function loadMyPets(uid){
+
+const list = document.getElementById("myPetsList");
+list.innerHTML = "Loading...";
+
+db.collection("pet_requests")
+.where("sellerId","==",uid)
+.onSnapshot(snapshot=>{
+
+list.innerHTML = "";
+
+if(snapshot.empty){
+    list.innerHTML = "No pets yet";
+    return;
+}
+
+snapshot.forEach(doc=>{
+    const pet = doc.data();
+
+    list.innerHTML += `
+    <div class="pet-card">
+        <b>${pet.petName}</b> (${pet.petType})<br>
+        Status: ${pet.status}
+    </div>`;
+});
+
+}, error => {
+    showToast(error.message, "error");
+});
+
+}
+
+function showToast(message, type="success"){
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.className = "toast show " + type;
+
+    setTimeout(()=>{
+        toast.className = "toast";
+    }, 3000);
+}
+
+</script>
+
+</body>
+</html>

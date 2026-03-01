@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adopta</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background:#f9fafb;
+}
+
+/* Navbar */
+.navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    height:70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 8%;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    z-index:1000;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:600;
+    color:#2563EB;
+}
+
+.menu{
+    display:flex;
+    gap:35px;
+}
+
+.menu a{
+    text-decoration:none;
+    color:#333;
+    font-weight:500;
+}
+
+.menu a:hover{
+    color:#2563EB;
+}
+
+.auth-btn{
+    padding:8px 18px;
+    border:none;
+    background:#2563EB;
+    color:#fff;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* ===== Hero Section ===== */
+.hero{
+    /* Full screen minus navbar */
+    height:calc(100vh - 70px);
+    margin-top:70px;
+
+    width:100%;
+    padding:0 8%;
+    display:flex;
+    align-items:flex-start;
+
+    background-image:url("https://i.supaimg.com/30640085-64df-48fb-a5a1-1091d003b596/7d303b12-d8c2-4888-b974-0c91de3551b9.jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    position:relative;
+}
+
+/* Overlay */
+.hero::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+}
+
+/* Content */
+.hero-text{
+    position:relative;
+    margin-top:60px;
+    max-width:600px;
+    color:white;
+}
+
+.hero-text h1{
+    font-size:64px;
+    margin-bottom:20px;
+    line-height:1.1;
+}
+
+.hero-text p{
+    font-size:22px;
+    margin-bottom:30px;
+}
+
+/* Buttons */
+.hero-buttons button{
+    padding:14px 28px;
+    margin-right:12px;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.adopt-btn{
+    background:#2563EB;
+    color:white;
+}
+
+.list-btn{
+    background:#F59E0B;
+    color:white;
+}
+
+.hero-buttons button:hover{
+    transform:translateY(-2px);
+    opacity:0.95;
+}
+
+/* Mobile */
+@media(max-width:900px){
+    .menu{
+        display:none;
+    }
+
+    .hero-text h1{
+        font-size:36px;
+    }
+
+    .hero-text p{
+        font-size:16px;
+    }
+}
+    
+/* Floating Paw Button */
+.paw-chat-btn{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    width:65px;
+    height:65px;
+    background:#2563EB;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 8px 25px rgba(0,0,0,0.3);
+    z-index:9999;
+    animation:float 2s ease-in-out infinite;
+}
+
+/* Floating animation */
+@keyframes float{
+    0%{ transform:translateY(0); }
+    50%{ transform:translateY(-6px); }
+    100%{ transform:translateY(0); }
+}
+
+.paw-chat-btn:hover{
+    transform:scale(1.08);
+    animation:none;
+}
+    
+.chat-container{
+    position:fixed;
+    bottom:110px;
+    right:30px;
+    width:340px;
+    display:none;
+    flex-direction:column;
+    z-index:9999;
+    background:#fff;   /* ADD THIS */
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.chat-header{
+    background:#2563EB;
+    color:white;
+    padding:12px;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+}
+
+.chat-body{
+    height:300px;
+    overflow-y:auto;
+    padding:10px;
+    font-size:14px;
+}
+
+.bot-msg{
+    background:#f1f5f9;
+    padding:8px;
+    border-radius:6px;
+    margin-bottom:6px;
+}
+
+.user-msg{
+    background:#2563EB;
+    color:white;
+    padding:8px;
+    border-radius:6px;
+    margin-bottom:6px;
+    text-align:right;
+}
+
+/* Quick Question Buttons */
+.quick-questions{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.quick-questions button{
+    background:#e5e7eb;
+    border:none;
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.quick-questions button:hover{
+    background:#2563EB;
+    color:white;
+}
+
+.chat-input{
+    display:flex;
+    border-top:1px solid #ddd;
+}
+
+.chat-input input{
+    flex:1;
+    padding:8px;
+    border:none;
+}
+
+.chat-input button{
+    background:#2563EB;
+    color:white;
+    border:none;
+    padding:8px 14px;
+}
+    
+    /* Header Layout */
+.chat-header{
+    background:#2563EB;
+    color:white;
+    padding:10px 12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+}
+
+/* Assistant Info */
+.assistant-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* Paw Avatar */
+.assistant-avatar{
+    width:36px;
+    height:36px;
+    background:white;
+    color:#2563EB;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* Name */
+.assistant-name{
+    font-weight:600;
+    font-size:14px;
+}
+
+/* Online Status */
+.assistant-status{
+    font-size:11px;
+    color:#4ade80; /* green */
+}
+
+/* Close Button */
+.close-btn{
+    cursor:pointer;
+    font-size:16px;
+}
+
+/* Toast Message */
+.toast{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    background:#2563EB;
+    color:white;
+    padding:14px 22px;
+    border-radius:8px;
+    font-size:14px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    opacity:0;
+    transform:translateY(20px);
+    transition:0.4s;
+    z-index:99999;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* Success & Error Colors */
+.toast.success{ background:#22c55e; }
+.toast.error{ background:#ef4444; }
+.toast.warning{ background:#f59e0b; }
+    
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">
+        Ad🐾pta
+    </div>
+
+    <div class="menu">
+        <a href="buyer.html">Adopt</a>
+       <a href="#careGuide">Care Guide</a>
+        <a href="#aboutUs">About Us</a>
+    </div>
+  
+<button class="auth-btn" id="authButton" onclick="handleAuth()">
+Login / Register
+</button>
+
+  
+</div>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="hero-text">
+        <h1>Every pet deserves a loving home.</h1>
+        <p>Find your perfect dog or cat and give them the life they deserve.</p>
+<div class="hero-buttons">
+    <a href="buyer.html">
+        <button class="adopt-btn">Adopt Now</button>
+    </a>
+
+   <button class="list-btn" onclick="goToSeller()">List a Pet</button>
+   
+
+</div>
+      
+    </div>
+</div>
+
+
+<!-- Care Guide Section -->
+<section id="careGuide" style="padding:60px 8%; background:#fff;">
+    <h2 style="margin-bottom:20px;">Pet Care Guide</h2>
+    <p><b>Food:</b> Provide balanced nutrition daily.</p>
+    <p><b>Vaccination:</b> Keep vaccines up to date.</p>
+    <p><b>Exercise:</b> Dogs need daily walks, cats need play time.</p>
+    <p><b>Vet Check:</b> Regular health checkups are important.</p>
+</section>
+
+
+<!-- About Us Section -->
+<section id="aboutUs" style="padding:60px 8%; background:#f9fafb;">
+    <h2 style="margin-bottom:20px;">About Adopta</h2>
+    <p>
+        Adopta connects pet lovers with pets who need a home.
+        Our platform acts as a safe bridge between pet listers and adopters.
+        All adoption requests are reviewed by admin to ensure safety and trust.
+    </p>
+</section>
+
+
+    <!-- Floating Paw Button -->
+<div class="paw-chat-btn" onclick="toggleChat()">
+    <svg viewBox="0 0 64 64" width="58" height="58">
+        <circle cx="20" cy="18" r="6" fill="white"/>
+        <circle cx="44" cy="18" r="6" fill="white"/>
+        <circle cx="14" cy="32" r="6" fill="white"/>
+        <circle cx="50" cy="32" r="6" fill="white"/>
+        <ellipse cx="32" cy="42" rx="12" ry="10" fill="white"/>
+    </svg>
+</div>
+
+<!-- Chat Box -->
+<div class="chat-container" id="chatContainer">
+
+   <div class="chat-header">
+    <div class="assistant-info">
+        <div class="assistant-avatar">🐾</div>
+        <div>
+            <div class="assistant-name">Adopta Assistant</div>
+            <div class="assistant-status">● Online</div>
+        </div>
+    </div>
+    <span class="close-btn" onclick="toggleChat()">✖</span>
+</div>
+    
+    <div class="chat-body" id="chatBody">
+        <div class="bot-msg">
+    Hi! I'm your Adopta Assistant 🐾  
+    I can help you choose a pet, understand adoption, and pet care.
+</div>
+        <div class="quick-questions" id="quickQuestions"></div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Type your question...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+    
+<script>
+
+const questions = [
+    "How to adopt a pet?",
+    "What should I check before adoption?",
+    "Dog or cat – which is better?",
+    "What vaccinations should a pet have?",
+    "How much does pet care cost?",
+    "Is adoption better than buying?"
+];
+
+
+
+
+function toggleChat(){
+    let box = document.getElementById("chatContainer");
+    box.style.display = box.style.display === "flex" ? "none" : "flex";
+}
+
+function showQuestions(){
+    let container = document.getElementById("quickQuestions");
+    container.innerHTML = "";
+
+    questions.forEach(q=>{
+        let btn = document.createElement("button");
+        btn.innerText = q;
+        btn.onclick = () => handleQuestion(q);
+        container.appendChild(btn);
+    });
+}
+
+function handleQuestion(question){
+    let chatBody = document.getElementById("chatBody");
+
+    chatBody.innerHTML += `<div class="user-msg">${question}</div>`;
+
+    let reply = getReply(question.toLowerCase());
+
+    setTimeout(()=>{
+        chatBody.innerHTML += `<div class="bot-msg">${reply}</div>`;
+        chatBody.scrollTop = chatBody.scrollHeight;
+        showQuestions();
+    },400);
+}
+
+function sendMessage(){
+    let input = document.getElementById("userInput");
+    let msg = input.value;
+    if(msg === "") return;
+
+    handleQuestion(msg);
+    input.value="";
+}
+
+function getReply(msg){
+
+    if(msg.includes("how to adopt")){
+        return "Create an account, browse available pets, select one, and contact the owner through Adopta.";
+    }
+
+    if(msg.includes("check before")){
+        return "Check vaccination records, age, health condition, behavior, and the owner's details.";
+    }
+
+    if(msg.includes("dog or cat")){
+        return "Dogs need more attention and exercise. Cats are independent and suitable for busy people.";
+    }
+
+    if(msg.includes("vaccination")){
+        return "Common vaccines include Rabies, DHPP for dogs, and FVRCP for cats. Always verify records.";
+    }
+
+    if(msg.includes("cost")){
+        return "Monthly expenses include food, grooming, and vet care. Plan a budget before adopting.";
+    }
+
+    if(msg.includes("adoption better")){
+        return "Yes. Adoption saves lives, reduces stray population, and is more ethical than buying.";
+    }
+
+    return "I can help with adoption steps, pet care, vaccination, and choosing the right pet.";
+}
+  
+  
+
+
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+const firebaseConfig = {
+   apiKey: "AIzaSyAyqttS3yl4qJMWF0fzsOyvTrf2-4JDkLY",
+    authDomain: "adopta-25b7f.firebaseapp.com",
+    projectId: "adopta-25b7f"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+.then(() => {
+    console.log("Session mode enabled");
+})
+.catch(error => {
+    console.error(error);
+});
+
+const auth = firebase.auth();
+const authBtn = document.getElementById("authBtn");
+const listPetBtn = document.getElementById("listPetBtn"); // your List a Pet button
+
+auth.onAuthStateChanged(user => {
+    if(user){
+        // User logged in
+        authBtn.innerText = "Logout";
+        authBtn.onclick = () => {
+            auth.signOut().then(() => {
+                window.location.reload();
+            });
+        };
+
+        // Allow List a Pet
+        if(listPetBtn){
+            listPetBtn.onclick = () => {
+                window.location.href = "seller.html";
+            };
+        }
+
+    } else {
+        // User not logged in
+        authBtn.innerText = "Login";
+        authBtn.onclick = () => {
+            window.location.href = "login.html";
+        };
+
+        // Ask login before listing pet
+        if(listPetBtn){
+            listPetBtn.onclick = () => {
+                localStorage.setItem("redirectAfterLogin", "seller.html");
+                window.location.href = "login.html";
+            };
+        }
+    }
+});
+
+function goToSeller(){
+    const user = firebase.auth().currentUser;
+
+    if(user){
+        // Already logged in → go directly
+        window.location.href = "seller.html";
+    } else {
+        // Not logged → save redirect and go login
+        localStorage.setItem("redirectAfterLogin", "seller.html");
+        window.location.href = "login.html";
+    }
+}
+
+
+const authButton = document.getElementById("authButton");
+
+auth.onAuthStateChanged(user => {
+    if(user){
+        authButton.innerText = "Logout";
+    } else {
+        authButton.innerText = "Login / Register";
+    }
+});
+
+function handleAuth(){
+    const user = auth.currentUser;
+
+    if(user){
+        auth.signOut().then(()=>{
+            showToast("Logged out");
+            setTimeout(()=>{
+                window.location.href = "index.html";
+            },1000);
+        });
+    } else {
+        window.location.href = "login.html";
+    }
+}
+
+
+function goToLogin(){
+    localStorage.removeItem("redirectAfterLogin");
+    window.location.href = "login.html";
+}
+
+function showToast(message, type="success"){
+    const toast = document.getElementById("toast");
+
+    toast.innerText = message;
+    toast.className = "toast show " + type;
+
+    setTimeout(()=>{
+        toast.className = "toast";
+    },3000);
+}
+
+
+</script>
+
+</body>
+</html>

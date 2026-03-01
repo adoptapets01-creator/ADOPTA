@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Adopta Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background-image:url("https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+/* Overlay */
+body::before{
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    z-index:-1;
+}
+
+/* Top Bar */
+.topbar{
+    width:100%;
+    padding:18px 6%;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(12px);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:white;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:600;
+}
+
+.logout{
+    padding:8px 16px;
+    border:none;
+    background:#EF4444;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* Dashboard Container */
+.dashboard{
+    padding:40px 6%;
+}
+
+/* Cards Grid */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:25px;
+}
+
+/* Card Style */
+.card{
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:18px;
+    padding:25px;
+    color:white;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+/* Icon */
+.card-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+/* Number */
+.card h2{
+    font-size:32px;
+    margin:5px 0;
+}
+
+/* Title */
+.card p{
+    font-size:15px;
+    opacity:0.9;
+}
+
+/* Section */
+.section{
+    margin-top:40px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(15px);
+    border-radius:18px;
+    padding:25px;
+    color:white;
+}
+
+.section{
+    margin-top:40px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(15px);
+    border-radius:18px;
+    padding:25px;
+    color:white;
+    max-height:400px;
+    overflow-y:auto;
+}
+
+
+/* Toast */
+.toast{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    min-width:260px;
+    padding:14px 20px;
+    background:#111;
+    color:#fff;
+    border-radius:8px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+    opacity:0;
+    transform:translateY(20px);
+    transition:all 0.3s ease;
+    z-index:9999;
+    font-size:14px;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.toast.success{
+    background:#22c55e;
+}
+
+.toast.error{
+    background:#ef4444;
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+    <div class="logo">Ad🐾pta Admin</div>
+    <div>
+        <button onclick="location.href='index.html'" style="margin-right:10px;padding:8px 16px;border:none;background:#2563EB;color:white;border-radius:6px;">Home</button>
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<!-- Seller Detail Modal -->
+<div id="sellerModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+z-index:9999;
+justify-content:center;
+align-items:center;
+">
+
+<div style="
+background:white;
+width:90%;
+max-width:500px;
+border-radius:12px;
+padding:20px;
+color:#333;
+max-height:90%;
+overflow-y:auto;
+">
+
+<h2 id="mPetName"></h2>
+<img id="mImage" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:10px;">
+
+<p id="mType"></p>
+<p id="mAge"></p>
+<p id="mBreed"></p>
+<p id="mLocation"></p>
+<p id="mVaccine"></p>
+<p id="mDescription"></p>
+<p id="mSeller"></p>
+
+
+<div style="margin-top:15px;text-align:right;">
+
+<button id="mApprove"
+style="background:#22c55e;color:white;border:none;padding:8px 14px;border-radius:6px;margin-right:5px;">
+Approve
+</button>
+
+<button id="mReject"
+style="background:#ef4444;color:white;border:none;padding:8px 14px;border-radius:6px;margin-right:5px;">
+Reject
+</button>
+
+<button onclick="closeSellerModal()"
+style="padding:8px 14px;border:none;border-radius:6px;">
+Close
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- Dashboard -->
+<div class="dashboard">
+
+    <!-- Stats Cards -->
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-icon">🐶</div>
+            <h2 id="totalPets">0</h2>
+            <p>Total Pets Listed</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🐾</div>
+            <h2 id="pendingPets">0</h2>
+            <p>Pending Seller Requests</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🏠</div>
+            <h2>0</h2>
+            <p>Pets Adopted</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">📩</div>
+            <h2>0</h2>
+            <p>Buyer Requests</p>
+        </div>
+
+    </div>
+
+    <!-- Seller Requests Section -->
+    <div class="section">
+    <h3>Seller Submissions</h3>
+    <div id="requestList"></div>
+</div>
+    
+    <div class="section">
+    <h3>Approved Pets</h3>
+    <div id="approvedList"></div>
+</div>
+
+    <!-- Buyer Requests Section -->
+    <div class="section">
+    <h3>Buyer Requests</h3>
+    <div id="buyerRequestsList"></div>
+</div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+  <!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAyqttS3yl4qJMWF0fzsOyvTrf2-4JDkLY",
+  authDomain: "adopta-25b7f.firebaseapp.com",
+  projectId: "adopta-25b7f"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script> 
+    
+<script>
+
+
+    db.collection("adoptionRequests")
+.where("status","==","approved")
+.onSnapshot(snapshot => {
+    document.querySelectorAll(".card h2")[2].innerText = snapshot.size;
+});
+const requestList = document.getElementById("requestList");
+
+db.collection("pet_requests")
+.where("status","==","pending")
+.onSnapshot(snapshot => {
+
+    requestList.innerHTML = "";
+
+    snapshot.forEach(doc => {
+        const p = doc.data();
+        const id = doc.id;
+
+        requestList.innerHTML += `
+        <div style="background:rgba(255,255,255,0.15);padding:15px;border-radius:10px;margin-bottom:15px;">
+            
+            <img src="${p.imageUrls[0]}" style="width:120px;height:90px;object-fit:cover;border-radius:6px;">
+            
+            <h4>${p.petName}</h4>
+            <p>${p.breed} | ${p.location}</p>
+            <p>Seller: ${p.sellerPhone}</p>
+
+          <button onclick="viewSeller('${id}')"
+    style="background:#2563EB;color:white;border:none;padding:6px 12px;border-radius:6px;">
+    View Details
+    </button>
+
+        </div>
+        `;
+    });
+
+});
+
+const buyerRequestsList = document.getElementById("buyerRequestsList");
+
+// Listen to adoption requests in real-time
+db.collection("adoptionRequests").orderBy("timestamp", "desc")
+.onSnapshot(snapshot => {
+    buyerRequestsList.innerHTML = ""; // Clear previous
+
+    snapshot.forEach(doc => {
+    const req = doc.data();
+    const id = doc.id;
+    const status = req.status || "pending";
+        
+     buyerRequestsList.innerHTML += `
+<div style="background:rgba(255,255,255,0.15);padding:15px;border-radius:10px;margin-bottom:15px;">
+    
+   <h4>${req.petName}</h4>
+<p><b>Name:</b> ${req.buyerName || "Not provided"}</p>
+<p><b>Email:</b> ${req.buyerEmail}</p>
+<p><b>Phone:</b> ${req.buyerPhone || "Not provided"}</p>
+
+    <p>Status: 
+    <b style="color:${status === 'approved' ? '#22c55e' : status === 'rejected' ? '#ef4444' : '#f59e0b'}">
+    ${status.toUpperCase()}
+    </b>
+    </p>
+
+    ${status === "pending" ? `
+        <button onclick="approveBuyerRequest('${id}')"
+        style="background:#22c55e;color:white;border:none;padding:6px 12px;border-radius:6px;margin-right:5px;">
+        Approve
+        </button>
+
+        <button onclick="rejectBuyerRequest('${id}')"
+        style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;">
+        Reject
+        </button>
+    ` : ``}
+
+</div>
+`;
+
+    });
+});
+
+// Approve / Reject functions
+function approveBuyerRequest(id){
+    db.collection("adoptionRequests").doc(id).update({status: "approved"});
+    showToast("Buyer request approved!");
+}
+
+function rejectBuyerRequest(id){
+    db.collection("adoptionRequests").doc(id).update({status: "rejected"});
+    showToast("Buyer request rejected!");
+}
+
+</script>    
+    
+  <script>
+
+function approvePet(id){
+
+    const ref = db.collection("pet_requests").doc(id);
+
+    ref.get().then(doc => {
+
+        const data = doc.data();
+
+        db.collection("pets").add({
+            ...data,
+            ownerId: data.sellerId,   // 🔥 IMPORTANT
+            status: "approved",
+            createdAt: new Date()
+        })
+        .then(() => {
+            ref.delete();
+            showToast("Pet Approved Successfully");
+        });
+
+    });
+}
+
+function rejectPet(id){
+    db.collection("pet_requests").doc(id).delete();
+    showToast("Pet Rejected");
+}
+</script>  
+
+ <script>
+// Total Approved Pets
+function deletePet(id){
+    db.collection("pets").doc(id).delete();
+    showToast("Pet removed from approved list");
+}
+
+db.collection("pets").onSnapshot(snapshot => {
+    document.getElementById("totalPets").innerText = snapshot.size;
+});
+
+db.collection("adoptionRequests")
+.where("status","==","pending")
+.onSnapshot(snapshot => {
+    document.querySelectorAll(".card h2")[3].innerText = snapshot.size;
+});
+
+
+// Pending Requests
+db.collection("pet_requests")
+.where("status","==","pending")
+.onSnapshot(snapshot => {
+    document.getElementById("pendingPets").innerText = snapshot.size;
+});
+    
+ const approvedList = document.getElementById("approvedList");
+
+db.collection("pets").onSnapshot(snapshot => {
+
+    approvedList.innerHTML = "";
+
+    snapshot.forEach(doc => {
+        const p = doc.data();
+        const id = doc.id;
+
+        // Multiple images slider (simple scroll)
+        let imagesHTML = "";
+        if(p.imageUrls && p.imageUrls.length > 0){
+            imagesHTML = `<div style="display:flex;overflow-x:auto;gap:6px;">`;
+            p.imageUrls.forEach(url => {
+                imagesHTML += `<img src="${url}" style="width:120px;height:90px;object-fit:cover;border-radius:6px;">`;
+            });
+            imagesHTML += `</div>`;
+        }
+
+        approvedList.innerHTML += `
+        <div style="background:rgba(255,255,255,0.15);padding:15px;border-radius:10px;margin-bottom:15px;">
+            
+            ${imagesHTML}
+
+            <h4>${p.petName}</h4>
+            <p>${p.breed} | ${p.location}</p>
+            <p>Seller: ${p.sellerPhone}</p>
+
+            <button onclick="deletePet('${id}')"
+            style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;margin-top:5px;">
+            Remove
+            </button>
+        </div>
+        `;
+    });
+
+});
+
+function logout(){
+    firebase.auth().signOut().then(()=>{
+        window.location.href = "index.html";
+    });
+}
+
+
+function viewSeller(id){
+
+    const modal = document.getElementById("sellerModal");
+
+    db.collection("pet_requests").doc(id).get().then(doc => {
+
+        const p = doc.data();
+
+        document.getElementById("mPetName").innerText = p.petName;
+        document.getElementById("mImage").src = p.imageUrls[0];
+
+        document.getElementById("mType").innerText = "Type: " + p.petType;
+        document.getElementById("mAge").innerText = "Age: " + p.age;
+        document.getElementById("mBreed").innerText = "Breed: " + p.breed;
+        document.getElementById("mLocation").innerText = "Location: " + p.location;
+        document.getElementById("mVaccine").innerText = "Vaccines: " + (p.vaccines || []).join(", ");
+        document.getElementById("mDescription").innerText = "Description: " + (p.description || "No description");
+        document.getElementById("mSeller").innerText = "Seller Phone: " + p.sellerPhone;
+
+        // Set approve / reject buttons
+        document.getElementById("mApprove").onclick = () => {
+            approvePet(id);
+            closeSellerModal();
+        };
+
+        document.getElementById("mReject").onclick = () => {
+            rejectPet(id);
+            closeSellerModal();
+        };
+
+        modal.style.display = "flex";
+    });
+}
+
+function closeSellerModal(){
+    document.getElementById("sellerModal").style.display = "none";
+}
+
+function showToast(message, type="success"){
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.className = "toast show " + type;
+
+    setTimeout(()=>{
+        toast.className = "toast";
+    },3000);
+}
+    
+</script>   
+    
+</body>
+</html>
