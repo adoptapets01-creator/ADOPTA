@@ -424,36 +424,48 @@ function submitPet(){
     });
 }
 
-function loadMyPets(uid){
+function loadMyPets(uid) {
+    const list = document.getElementById("myPetsList");
+    list.innerHTML = "Loading...";
 
-const list = document.getElementById("myPetsList");
-list.innerHTML = "Loading...";
+    // Listen to pending pets
+    db.collection("pet_requests").where("sellerId", "==", uid)
+    .onSnapshot(pendingSnapshot => {
 
-db.collection("pet_requests")
-.where("sellerId","==",uid)
-.onSnapshot(snapshot=>{
+        // Listen to approved pets
+        db.collection("pets").where("ownerId", "==", uid)
+        .onSnapshot(approvedSnapshot => {
 
-list.innerHTML = "";
+            list.innerHTML = ""; // Clear list
 
-if(snapshot.empty){
-    list.innerHTML = "No pets yet";
-    return;
-}
+            // Add pending pets first
+            pendingSnapshot.forEach(doc => {
+                const pet = doc.data();
+                list.innerHTML += `
+                <div class="pet-card">
+                    <b>${pet.petName}</b> (${pet.petType})<br>
+                    Status: ${pet.status} ⏳
+                </div>`;
+            });
 
-snapshot.forEach(doc=>{
-    const pet = doc.data();
+            // Add approved pets next
+            approvedSnapshot.forEach(doc => {
+                const pet = doc.data();
+                list.innerHTML += `
+                <div class="pet-card">
+                    <b>${pet.petName}</b> (${pet.petType})<br>
+                    Status: ${pet.status} ✅
+                </div>`;
+            });
 
-    list.innerHTML += `
-    <div class="pet-card">
-        <b>${pet.petName}</b> (${pet.petType})<br>
-        Status: ${pet.status}
-    </div>`;
-});
+            // If no pets at all
+            if(pendingSnapshot.empty && approvedSnapshot.empty){
+                list.innerHTML = "No pets yet";
+            }
 
-}, error => {
-    showToast(error.message, "error");
-});
-
+        }, error => { showToast(error.message, "error"); });
+        
+    }, error => { showToast(error.message, "error"); });
 }
 
 function showToast(message, type="success"){
@@ -469,4 +481,5 @@ function showToast(message, type="success"){
 </script>
 
 </body>
+
 </html>
